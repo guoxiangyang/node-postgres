@@ -2,6 +2,8 @@
 
 [![Build Status](https://secure.travis-ci.org/brianc/node-postgres.svg?branch=master)](http://travis-ci.org/brianc/node-postgres)
 [![Dependency Status](https://david-dm.org/brianc/node-postgres.svg)](https://david-dm.org/brianc/node-postgres)
+<span class="badge-npmversion"><a href="https://npmjs.org/package/pg" title="View this project on NPM"><img src="https://img.shields.io/npm/v/pg.svg" alt="NPM version" /></a></span>
+<span class="badge-npmdownloads"><a href="https://npmjs.org/package/pg" title="View this project on NPM"><img src="https://img.shields.io/npm/dm/pg.svg" alt="NPM downloads" /></a></span>
 
 Non-blocking PostgreSQL client for node.js.  Pure JavaScript and optional native libpq bindings.
 
@@ -20,7 +22,7 @@ var pg = require('pg');
 
 // instantiate a new client
 // the client will read connection information from
-// the same environment varaibles used by postgres cli tools
+// the same environment variables used by postgres cli tools
 var client = new pg.Client();
 
 // connect to our database
@@ -62,6 +64,7 @@ var config = {
   user: 'foo', //env var: PGUSER
   database: 'my_db', //env var: PGDATABASE
   password: 'secret', //env var: PGPASSWORD
+  host: 'localhost', // Server hosting the postgres database
   port: 5432, //env var: PGPORT
   max: 10, // max number of clients in the pool
   idleTimeoutMillis: 30000, // how long a client is allowed to remain idle before being closed
@@ -132,6 +135,8 @@ var config = {
 
 For more information about `config.ssl` check [TLS (SSL) of nodejs](https://nodejs.org/dist/latest-v4.x/docs/api/tls.html)
 
+For more information about `config.ssl` check [TLS (SSL) of nodejs](https://nodejs.org/dist/latest-v4.x/docs/api/tls.html)
+
 ## [More Documentation](https://github.com/brianc/node-postgres/wiki)
 
 ## Native Bindings
@@ -157,7 +162,17 @@ var Pool = pg.Pool // good! a pool bound to the native client
 var Client = pg.Client // good! this client uses libpq bindings
 ```
 
-node-postgres abstracts over the pg-native module to provide exactly the same interface as the pure JavaScript version. Care has been taken to keep the number of api differences between the two modules to a minimum; however, it is recommended you use either the pure JavaScript or native bindings in both development and production and don't mix & match them in the same process - it can get confusing!
+#### API differences
+
+node-postgres abstracts over the pg-native module to provide the same interface as the pure JavaScript version. Care has been taken to keep the number of api differences between the two modules to a minimum.  
+However, currently some differences remain, especially :
+* the error object in pg-native is different : notably, the information about the postgres error code is not present in field `code` but in the field `sqlState` , and the name of a few other fields is different (see https://github.com/brianc/node-postgres/issues/938, https://github.com/brianc/node-postgres/issues/972).
+So for example, if you rely on error.code in your application, your will have to adapt your code to work with native bindings.
+* the notification object has a few less properties  (see https://github.com/brianc/node-postgres/issues/1045)
+* column objects have less properties (see https://github.com/brianc/node-postgres/issues/988)
+* the modules https://github.com/brianc/node-pg-copy-streams and https://github.com/brianc/node-pg-query-stream do not work with native bindings (you will have to require 'pg' to use them).
+
+Thus, it is recommended you use either the pure JavaScript or native bindings in both development and production and don't mix & match them in the same process - it can get confusing!
 
 ## Features
 

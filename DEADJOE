@@ -1,0 +1,12 @@
+
+*** These modified files were found in JOE when it aborted on Sat Nov 19 22:46:55 2016
+*** JOE was aborted by UNIX signal 15
+
+*** File '(Unnamed)'
+/home/git/src/node-postgres/.git/MERGE_MSG
+
+*** File '* Startup Log *'
+Processing '/etc/joe/editorrc'...
+Processing '/etc/joe/ftyperc'...
+Finished processing /etc/joe/ftyperc
+Finished processing /etc/joe/editorrc
